@@ -45,16 +45,39 @@ int main(int argc, char* argv[]) {
     // Event loop
     SDL_Event e;
     int quit = 0;
-    while (!quit) {
+
+    Coordinate* stack = NULL;
+    size_t stackSize = 0;
+
+    Coordinate* visited = NULL;
+    size_t visitedSize = 0;
+
+    push(&stack, &stackSize, (Coordinate){0,0});
+
+    while (stackSize!=0 && !quit) {
         while (SDL_PollEvent(&e) != 0) {
             if (e.type == SDL_QUIT) {
                 quit = 1;
+
             }
         }
-        draw_sprite(renderer, 0, 0);
+
+        Coordinate coord = pop(&stack, &stackSize);
+        int pX = coord.x;
+        int pY = coord.y;
+
+        push(&visited, &visitedSize, (Coordinate){pX, pY});
+
+        for (int i = 0; i < 4; i++) {
+            int nX = pX + DIRECTIONS[i].x * SIZE;
+            int nY = pY + DIRECTIONS[i].y * SIZE;
+        }
+
         SDL_RenderPresent(renderer);
-        remove_sprite(renderer, 0, 0);
-        SDL_RenderPresent(renderer);
+    }
+
+    if (!quit) {
+        SDL_Delay(2000);
     }
 
     // Quit SDL
