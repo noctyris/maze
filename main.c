@@ -85,7 +85,15 @@ int main(int argc, char* argv[]) {
             int nX = pX + DIRECTIONS[i].x * SIZE;
             int nY = pY + DIRECTIONS[i].y * SIZE;
 
-            printf("%d\n", isCellOk(renderer, nX, nY));
+            if (isCellOk(renderer, nX, nY)) {
+                push(&stack, &stackSize, (Coordinate){pX, pY});
+            }
+
+            remove_sprite(renderer, pX, pY);
+            draw_sprite(renderer, nX, nY);
+
+            // TODO: Continue the pathfinder
+
         }
 
         SDL_RenderPresent(renderer);
