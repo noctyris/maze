@@ -1,7 +1,8 @@
 #include "main.h"
+#include "ui.c"
 
 void maze(SDL_Renderer* renderer, Coordinate* directions) {
-    SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
+    SDL_SetRenderDrawColor(renderer, WALLC, WALLC, WALLC, 255);
     for (int x = SIZE; x < WIDTH; x += SIZE * 2) {
         for (int y = SIZE; y < HEIGHT; y += SIZE * 2) {
             SDL_Rect rect = {x, y, SIZE, SIZE};
@@ -53,13 +54,6 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    Coordinate DIRECTIONS[] = {
-        {0, 1},
-        {0, -1},
-        {1, 0},
-        {-1, 0},
-    };
-
     maze(renderer,DIRECTIONS);
 
     // Event loop
@@ -74,11 +68,10 @@ int main(int argc, char* argv[]) {
 
     push(&stack, &stackSize, (Coordinate){0,0});
 
-    while (stackSize!=0 && !quit) {
+    while (stackSize>0 && !quit) {
         while (SDL_PollEvent(&e) != 0) {
             if (e.type == SDL_QUIT) {
                 quit = 1;
-
             }
         }
 
@@ -91,6 +84,8 @@ int main(int argc, char* argv[]) {
         for (int i = 0; i < 4; i++) {
             int nX = pX + DIRECTIONS[i].x * SIZE;
             int nY = pY + DIRECTIONS[i].y * SIZE;
+
+            printf("%d\n", isCellOk(renderer, nX, nY));
         }
 
         SDL_RenderPresent(renderer);

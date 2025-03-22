@@ -39,3 +39,17 @@ void remove_sprite(SDL_Renderer* renderer, int x, int y) {
 
     draw_filled_circle(renderer, x + SIZE / 2 - 1, y + SIZE / 2 - 1, 3, r, g, b);
 }
+
+int isCellOk(SDL_Renderer* renderer, int x, int y) {
+    Uint32 pixel = get_renderer_pixel(renderer, x, y);
+    Uint8 r, g, b, a;
+    SDL_Surface *surface = SDL_CreateRGBSurfaceWithFormat(0, 1, 1, 32, SDL_PIXELFORMAT_RGBA32);
+    get_rgba(pixel, surface->format, &r, &g, &b, &a);
+    SDL_FreeSurface(surface);
+
+    if (r == WALLC && g == WALLC && b == WALLC) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
