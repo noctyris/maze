@@ -52,6 +52,7 @@ int main(int argc, char* argv[]) {
             }
         }
         draw_sprite(renderer, 0, 0);
+        SDL_RenderPresent(renderer);
         remove_sprite(renderer, 0, 0);
         SDL_RenderPresent(renderer);
     }

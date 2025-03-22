@@ -20,6 +20,7 @@ void draw_filled_circle(SDL_Renderer* renderer, int cx, int cy, int radius, int 
         int dx = (int)sqrt(radius * radius - y * y);
         SDL_RenderDrawLine(renderer, cx - dx, cy + y, cx + dx, cy + y);
     }
+    SDL_RenderPresent(renderer);
 }
 
 Coordinate chooseRandomCoordinate(Coordinate* directions) {
@@ -72,13 +73,11 @@ void draw_sprite(SDL_Renderer* renderer, int x, int y) {
 void remove_sprite(SDL_Renderer* renderer, int x, int y) {
     Uint32 pixel = get_renderer_pixel(renderer, x, y);
     Uint8 r, g, b, a;
-
-    // Récupérer le format depuis le renderer
     SDL_Surface *surface = SDL_CreateRGBSurfaceWithFormat(0, 1, 1, 32, SDL_PIXELFORMAT_RGBA32);
     get_rgba(pixel, surface->format, &r, &g, &b, &a);
     SDL_FreeSurface(surface);
 
-    printf("Pixel à (%d, %d) -> RGBA: (%d, %d, %d, %d)\n", x, y, r, g, b, a);
+    draw_filled_circle(renderer, x + SIZE / 2 - 1, y + SIZE / 2 - 1, 3, r, g, b);
 }
 
 #endif
