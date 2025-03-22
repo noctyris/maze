@@ -1,4 +1,24 @@
-#include "utils.h"
+#include "main.h"
+
+void maze(SDL_Renderer* renderer, Coordinate* directions) {
+    SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
+    for (int x = SIZE; x < WIDTH; x += SIZE * 2) {
+        for (int y = SIZE; y < HEIGHT; y += SIZE * 2) {
+            SDL_Rect rect = {x, y, SIZE, SIZE};
+            SDL_RenderFillRect(renderer, &rect);
+
+            Coordinate randomCoord = chooseRandomCoordinate(directions);
+            SDL_Rect adjacentRect = {x + randomCoord.x * SIZE, y + randomCoord.y * SIZE, SIZE, SIZE};
+            SDL_RenderFillRect(renderer, &adjacentRect);
+        }
+    }
+
+    SDL_SetRenderDrawColor(renderer, 0, 200, 50, 255);
+    SDL_RenderFillRect(renderer, &(SDL_Rect){0, 0, SIZE, SIZE});
+
+    SDL_SetRenderDrawColor(renderer, 200, 50, 0, 255);
+    SDL_RenderFillRect(renderer, &(SDL_Rect){WIDTH - SIZE, HEIGHT - SIZE, SIZE, SIZE});
+}
 
 int main(int argc, char* argv[]) {
     // Init SDL
