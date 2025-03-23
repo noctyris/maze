@@ -1,4 +1,4 @@
-#define MAX_HEAP_SIZE 100
+#define MAX_HEAP_SIZE 1000
 
 typedef struct {
     int x, y; // Node coordinates

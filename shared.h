@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include <math.h>
 #include <time.h>
-#include <stdbool.h>
 #include <limits.h>
 #include <string.h>
 #include "priorityqueue.c"
@@ -14,7 +13,7 @@
 #define HEIGHT  600
 #define WIDTH   800
 #define WALLC   200
-#define SIZE    10
+#define SIZE    8
 
 typedef struct {
     int x;

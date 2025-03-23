@@ -3,6 +3,10 @@
 int main(int argc, char* argv[]) {
     srand(time(NULL));
 
+    char nAlgo[1];
+    printf("Quel algorithme exectuer ? \n1-\tDFS\n2-\tA*\n> ");
+    scanf("%1s", nAlgo);
+
     // Init SDL
     SDL_SetHint(SDL_HINT_RENDER_VSYNC, "0");
     if (SDL_Init(SDL_INIT_VIDEO) < 0 ) {
@@ -35,10 +39,16 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+
+
     maze(renderer,DIRECTIONS);
 
-    // DFS(renderer);
-    A_star(renderer);
+    if (nAlgo[0] == '1') DFS(renderer);
+    else if (nAlgo[0] == '2') A_star(renderer);
+    else {
+        printf("Erreur: entrée non valide");
+        return 1;
+    }
 
     // Quit SDL
     SDL_DestroyWindow(window);

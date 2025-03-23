@@ -92,10 +92,6 @@ void DFS(SDL_Renderer* renderer) {
     free(path);
 }
 
-// bool A_star(int grid[(int)(HEIGHT/SIZE)][(int)(WIDTH/SIZE)], int startX, int startY, int goalX, int goalY) {
-//     PriorityQueue openList = { .size = 0};
-// }
-
 void A_star(SDL_Renderer* renderer) {
     SDL_Event e;
     int quit = 0;
@@ -169,7 +165,7 @@ void A_star(SDL_Renderer* renderer) {
                 float f = tentative_g + heuristic(gridX, gridY, goalX, goalY);
                 pushPQ(&openList, gridX, gridY, f);
 
-                add_parent(&parent, &parentSize, (Coordinate){nX, nY}, (Coordinate){pX, pY});
+                add_parent(&parent, &parentSize, (Coordinate){gridX, gridY}, (Coordinate){pX, pY});
                 draw_sprite(renderer, nX, nY);
             }
         }
@@ -183,18 +179,24 @@ void A_star(SDL_Renderer* renderer) {
             remove_sprite(renderer, openList.heap[i].x * SIZE, openList.heap[i].y * SIZE);
         }
 
-        Coordinate* path = NULL;
-        size_t pathSize = 0;
-        Coordinate current = {pX, pY};
+        int i = 0;
+        Coordinate current = {goalX, goalY};
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 
         while (!(current.x == startX && current.y == startY)) {
-            push(&path, &pathSize, current);
-            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-            SDL_RenderDrawLine(renderer, current.x + SIZE / 2, current.y + SIZE / 2,
-                               find_parent(parent, parentSize, current).x + SIZE / 2,
-                               find_parent(parent, parentSize, current).y + SIZE / 2);
+            if (i > parentSize) {
+                printf("Infinite loop: path can't be determined\n");
+                return;
+            }
+            i++;
+
+            Coordinate parentCoord = find_parent(parent, parentSize, current);
+
+            SDL_RenderDrawLine(renderer, current.x * SIZE + SIZE / 2, current.y * SIZE + SIZE / 2,
+                               find_parent(parent, parentSize, current).x * SIZE + SIZE / 2,
+                               find_parent(parent, parentSize, current).y * SIZE + SIZE / 2);
             SDL_RenderPresent(renderer);
-            current = find_parent(parent, parentSize, current);
+            current = parentCoord;
         }
     }
 
