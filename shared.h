@@ -1,10 +1,16 @@
 #ifndef DEP_H
 #define DEP_H
 
-#define SIZE    7
-#define WIDTH   800
+#include <SDL2/SDL.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+#include <time.h>
+
 #define HEIGHT  600
+#define WIDTH   800
 #define WALLC   200
+#define SIZE    7
 
 typedef struct {
     int x;
