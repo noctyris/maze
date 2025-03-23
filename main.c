@@ -37,7 +37,8 @@ int main(int argc, char* argv[]) {
 
     maze(renderer,DIRECTIONS);
 
-    DFS(renderer);
+    // DFS(renderer);
+    A_star(renderer);
 
     // Quit SDL
     SDL_DestroyWindow(window);

@@ -91,3 +91,18 @@ void DFS(SDL_Renderer* renderer) {
     free(parent);
     free(path);
 }
+
+void A_star(SDL_Renderer* renderer) {
+    SDL_Event e;
+    int quit = 0;
+    int found = 0;
+
+    // Coordinate S = {0,0};
+    // Coordinate G = {(int)(WIDTH / SIZE), (int)(HEIGHT / SIZE)};
+    //
+    // Coordinate* openlist = {{0,0}};
+    // int openListSize = 1;
+    //
+    // Coordinate* closedList = {{0,0}};
+    // int closedListSize = 0;
+}

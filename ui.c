@@ -61,7 +61,7 @@ void remove_sprite(SDL_Renderer* renderer, int x, int y) {
 }
 
 int isCellOk(SDL_Renderer* renderer, int x, int y) {
-    if (x < 0 || x > WIDTH || y < 0 || y > HEIGHT) {
+    if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) {
         return 0;
     }
 

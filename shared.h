@@ -6,11 +6,12 @@
 #include <stdio.h>
 #include <math.h>
 #include <time.h>
+#include "priorityqueue.c"
 
 #define HEIGHT  600
 #define WIDTH   800
 #define WALLC   200
-#define SIZE    7
+#define SIZE    10
 
 typedef struct {
     int x;
