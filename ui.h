@@ -17,4 +17,6 @@ void remove_sprite(SDL_Renderer* renderer, int x, int y);
 
 int isCellOk(SDL_Renderer* renderer, int x, int y);
 
+int endReached(SDL_Renderer* renderer, int x, int y);
+
 #endif
