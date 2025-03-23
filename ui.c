@@ -48,8 +48,12 @@ int isCellOk(SDL_Renderer* renderer, int x, int y) {
     SDL_FreeSurface(surface);
 
     if (r == WALLC && g == WALLC && b == WALLC) {
-        return 1;
-    } else {
         return 0;
     }
+
+    if (x >= 0 && y >= 0) {
+        printf("OK for (%d, %d)\n", x, y);
+        return 1;
+    }
+    return 0;
 }

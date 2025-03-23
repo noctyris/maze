@@ -81,16 +81,16 @@ int main(int argc, char* argv[]) {
 
         push(&visited, &visitedSize, (Coordinate){pX, pY});
 
+        // remove_sprite(renderer, pX, pY);
+
         for (int i = 0; i < 4; i++) {
             int nX = pX + DIRECTIONS[i].x * SIZE;
             int nY = pY + DIRECTIONS[i].y * SIZE;
 
             if (isCellOk(renderer, nX, nY)) {
                 push(&stack, &stackSize, (Coordinate){pX, pY});
+                draw_sprite(renderer, nX, nY);
             }
-
-            remove_sprite(renderer, pX, pY);
-            draw_sprite(renderer, nX, nY);
 
             // TODO: Continue the pathfinder
 
