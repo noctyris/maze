@@ -13,4 +13,6 @@ void add_parent(ParentEntry** table, size_t* size, Coordinate key, Coordinate va
 
 Coordinate find_parent(ParentEntry* table, size_t size, Coordinate key);
 
+float heuristic(int x1, int y1, int x2, int y2);
+
 #endif

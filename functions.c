@@ -61,3 +61,7 @@ Coordinate find_parent(ParentEntry* table, size_t size, Coordinate key) {
     }
     return key;
 }
+
+float heuristic(int x1, int y1, int x2, int y2) {
+    return abs(x1-x2) + abs(y1-y2);
+}

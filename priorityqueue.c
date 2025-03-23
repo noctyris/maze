@@ -1,65 +1,67 @@
-#define MAX 100
+#define MAX_HEAP_SIZE 100
 
 typedef struct {
-    int items[MAX];
+    int x, y; // Node coordinates
+    float f; // Priority (f = g + h)
+} Node;
+
+typedef struct {
+    Node heap[MAX_HEAP_SIZE];
     int size;
 } PriorityQueue;
 
 // Function to swap two integers
-void swap(int* a, int* b) {
-    int temp = *a;
+void swap(Node* a, Node* b) {
+    Node temp = *a;
     *a = *b;
     *b  = temp;
 }
 
-// Maintain heap property during insertion
-void heapifyUp(PriorityQueue* pq, int index) {
-    if (index && pq->items[(index - 1) / 2] > pq->items[index]) {
-        swap(&pq->items[(index - 1) / 2], &pq->items[index]);
-        heapifyUp(pq, (index - 1) / 2);
-    }
-}
-
 // Add an item to the queue
-void enqueue(PriorityQueue* pq, int value) {
-    if (pq->size == MAX) {
+void pushPQ(PriorityQueue* pq, int x, int y, float f) {
+    if (pq->size >= MAX_HEAP_SIZE) {
         printf("Priority queue is full\n");
         return;
     }
 
-    pq->items[pq->size++] = value;
-    heapifyUp(pq, pq->size - 1);
-}
+    int i = pq->size++;
+    pq->heap[i].x = x;
+    pq->heap[i].y = y;
+    pq->heap[i].f = f;
 
-// Maintain heap property during deletion
-int heapifyDown(PriorityQueue* pq, int index) {
-    int smallest = index;
-    int left = 2 * index + 1;
-    int right = 2 * index + 2;
-    if (left < pq->size && pq->items[left] < pq->items[smallest]) smallest = left;
-    if (right < pq->size && pq->items[right] < pq->items[smallest]) smallest = right;
-    if (smallest != index) {
-        swap(&pq->items[index], &pq->items[smallest]);
-        heapifyDown(pq, smallest);
+    // Maintain heap property (ascending)
+    while (i>0 && pq->heap[(i-1)/2].f > pq->heap[i].f) {
+        swap(&pq->heap[i], &pq->heap[(i-1)/2]);
+        i = (i-1)/2;
     }
 }
 
-// Remove an item from the queue
-int dequeue(PriorityQueue* pq) {
-    if (!pq->size) {
+Node popPQ(PriorityQueue* pq) {
+    if (pq->size <= 0) {
         printf("Priority queue is empty\n");
-        return -1;
+        exit(1);
     }
-    int item = pq->items[0];
-    pq->items[0] = pq->items[--pq->size];
-    heapifyDown(pq, 0);
-    return item;
+    Node min = pq->heap[0];
+    pq->heap[0] = pq->heap[--pq->size];
+
+    // Maintain heap property (descending)
+    int i = 0;
+    while (1) {
+        int left = 2*i + 1;
+        int right = 2*i + 2;
+        int smallest = i;
+
+        if (left < pq->size && pq->heap[left].f < pq->heap[smallest].f) smallest = left;
+        if (right < pq->size && pq->heap[right].f < pq->heap[smallest].f) smallest = right;
+
+        if (smallest == i) break;
+
+        swap(&pq->heap[i], &pq->heap[smallest]);
+        i = smallest;
+    }
+    return min;
 }
 
-int peek(PriorityQueue* pq) {
-    if (!pq->size) {
-        printf("Priority queue is empty\n");
-        return -1;
-    }
-    return pq->items[0];
+int isEmpty(PriorityQueue* pq) {
+    return pq->size == 0;
 }

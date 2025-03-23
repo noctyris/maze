@@ -92,17 +92,121 @@ void DFS(SDL_Renderer* renderer) {
     free(path);
 }
 
+// bool A_star(int grid[(int)(HEIGHT/SIZE)][(int)(WIDTH/SIZE)], int startX, int startY, int goalX, int goalY) {
+//     PriorityQueue openList = { .size = 0};
+// }
+
 void A_star(SDL_Renderer* renderer) {
     SDL_Event e;
     int quit = 0;
     int found = 0;
 
-    // Coordinate S = {0,0};
-    // Coordinate G = {(int)(WIDTH / SIZE), (int)(HEIGHT / SIZE)};
-    //
-    // Coordinate* openlist = {{0,0}};
-    // int openListSize = 1;
-    //
-    // Coordinate* closedList = {{0,0}};
-    // int closedListSize = 0;
+    int GRID_HEIGHT = (int)(HEIGHT / SIZE);
+    int GRID_WIDTH = (int)(WIDTH / SIZE);
+
+    int startX = 0, startY = 0; // Point de départ
+    int goalX = GRID_WIDTH - 1, goalY = GRID_HEIGHT - 1; // Point d'arrivée
+
+    PriorityQueue openList = { .size = 0 };
+    pushPQ(&openList, startX, startY, heuristic(startX, startY, goalX, goalY));
+
+    int g[GRID_WIDTH][GRID_HEIGHT];
+    int visited[GRID_WIDTH][GRID_HEIGHT];
+    memset(visited, 0, sizeof(visited));
+
+    for (int i = 0; i < GRID_WIDTH; i++) {
+        for (int j = 0; j < GRID_HEIGHT; j++) {
+            g[i][j] = INT_MAX; // Initialiser tous les coûts à l'infini
+        }
+    }
+    g[startX][startY] = 0;
+
+    int pX, pY;
+
+    ParentEntry* parent = NULL;
+    size_t parentSize = 0;
+
+    add_parent(&parent, &parentSize, (Coordinate){startX, startY}, (Coordinate){startX, startY});
+
+    while (!isEmpty(&openList) && !quit && !found) {
+        while (SDL_PollEvent(&e) != 0) {
+            if (e.type == SDL_QUIT) {
+                quit = 1;
+            }
+        }
+
+        Node current = popPQ(&openList);
+        pX = current.x;
+        pY = current.y;
+
+        if (visited[pX][pY]) {
+            continue;
+        }
+
+        visited[pX][pY] = 1;
+        remove_sprite(renderer, pX * SIZE, pY * SIZE);
+
+        if (pX == goalX && pY == goalY) {
+            found = 1;
+            break;
+        };
+
+        for (int i = 0; i < 4; i++) {
+            int nX = (pX + DIRECTIONS[i].x) * SIZE;
+            int nY = (pY + DIRECTIONS[i].y) * SIZE;
+            int gridX = nX / SIZE;
+            int gridY = nY / SIZE;
+
+
+            if (!isCellOk(renderer, nX, nY) || visited[gridX][gridY]) {
+                continue;
+            }
+
+            float tentative_g = g[pX][pY] + 1; // Coût uniforme ici
+
+            if (tentative_g < g[gridX][gridY]) {
+                g[gridX][gridY] = tentative_g;
+                float f = tentative_g + heuristic(gridX, gridY, goalX, goalY);
+                pushPQ(&openList, gridX, gridY, f);
+
+                add_parent(&parent, &parentSize, (Coordinate){nX, nY}, (Coordinate){pX, pY});
+                draw_sprite(renderer, nX, nY);
+            }
+        }
+
+        SDL_RenderPresent(renderer);
+    }
+
+    // Afficher le chemin final
+    if (found) {
+        for (size_t i = 0; i < openList.size; i++) {
+            remove_sprite(renderer, openList.heap[i].x * SIZE, openList.heap[i].y * SIZE);
+        }
+
+        Coordinate* path = NULL;
+        size_t pathSize = 0;
+        Coordinate current = {pX, pY};
+
+        while (!(current.x == startX && current.y == startY)) {
+            push(&path, &pathSize, current);
+            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+            SDL_RenderDrawLine(renderer, current.x + SIZE / 2, current.y + SIZE / 2,
+                               find_parent(parent, parentSize, current).x + SIZE / 2,
+                               find_parent(parent, parentSize, current).y + SIZE / 2);
+            SDL_RenderPresent(renderer);
+            current = find_parent(parent, parentSize, current);
+        }
+    }
+
+    while (!quit) {
+        while (SDL_PollEvent(&e) != 0) {
+            if (e.type == SDL_QUIT) {
+                quit = 1;
+            }
+        }
+        SDL_RenderPresent(renderer);
+    }
+
+    // free(visited);
+    free(parent);
 }
