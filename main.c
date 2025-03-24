@@ -19,8 +19,8 @@ int main(int argc, char* argv[]) {
         "Maze",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
-        WIDTH,
-        HEIGHT,
+        WIDTH * SIZE,
+        HEIGHT * SIZE,
         SDL_WINDOW_SHOWN
     );
 
@@ -38,8 +38,6 @@ int main(int argc, char* argv[]) {
         SDL_Quit();
         return 1;
     }
-
-
 
     maze(renderer,DIRECTIONS);
 

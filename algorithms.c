@@ -97,21 +97,18 @@ void A_star(SDL_Renderer* renderer) {
     int quit = 0;
     int found = 0;
 
-    int GRID_HEIGHT = (int)(HEIGHT / SIZE);
-    int GRID_WIDTH = (int)(WIDTH / SIZE);
-
     int startX = 0, startY = 0; // Point de départ
-    int goalX = GRID_WIDTH - 1, goalY = GRID_HEIGHT - 1; // Point d'arrivée
+    int goalX = WIDTH - 1, goalY = HEIGHT - 1; // Point d'arrivée
 
     PriorityQueue openList = { .size = 0 };
     pushPQ(&openList, startX, startY, heuristic(startX, startY, goalX, goalY));
 
-    int g[GRID_WIDTH][GRID_HEIGHT];
-    int visited[GRID_WIDTH][GRID_HEIGHT];
+    int g[WIDTH][HEIGHT];
+    int visited[WIDTH][HEIGHT];
     memset(visited, 0, sizeof(visited));
 
-    for (int i = 0; i < GRID_WIDTH; i++) {
-        for (int j = 0; j < GRID_HEIGHT; j++) {
+    for (int i = 0; i < WIDTH; i++) {
+        for (int j = 0; j < HEIGHT; j++) {
             g[i][j] = INT_MAX; // Initialiser tous les coûts à l'infini
         }
     }

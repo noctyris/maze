@@ -2,8 +2,8 @@
 
 void maze(SDL_Renderer* renderer, Coordinate* directions) {
     SDL_SetRenderDrawColor(renderer, WALLC, WALLC, WALLC, 255);
-    for (int x = SIZE; x < WIDTH; x += SIZE * 2) {
-        for (int y = SIZE; y < HEIGHT; y += SIZE * 2) {
+    for (int x = SIZE; x < WIDTH * SIZE; x += SIZE * 2) {
+        for (int y = SIZE; y < HEIGHT * SIZE; y += SIZE * 2) {
             SDL_Rect rect = {x, y, SIZE, SIZE};
             SDL_RenderFillRect(renderer, &rect);
 
@@ -17,7 +17,7 @@ void maze(SDL_Renderer* renderer, Coordinate* directions) {
     SDL_RenderFillRect(renderer, &(SDL_Rect){0, 0, SIZE, SIZE});
 
     SDL_SetRenderDrawColor(renderer, 200, 50, 0, 255);
-    SDL_RenderFillRect(renderer, &(SDL_Rect){(int)(WIDTH/SIZE)*SIZE - SIZE, (int)(HEIGHT/SIZE)*SIZE - SIZE, SIZE, SIZE});
+    SDL_RenderFillRect(renderer, &(SDL_Rect){WIDTH*SIZE - SIZE, HEIGHT*SIZE - SIZE, SIZE, SIZE});
 }
 
 void draw_filled_circle(SDL_Renderer* renderer, int cx, int cy, int radius, int r, int g, int b) {
@@ -61,7 +61,7 @@ void remove_sprite(SDL_Renderer* renderer, int x, int y) {
 }
 
 int isCellOk(SDL_Renderer* renderer, int x, int y) {
-    if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) {
+    if (x < 0 || x >= WIDTH * SIZE || y < 0 || y >= HEIGHT * SIZE) {
         return 0;
     }
 

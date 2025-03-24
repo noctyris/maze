@@ -10,10 +10,10 @@
 #include <string.h>
 #include "priorityqueue.c"
 
-#define HEIGHT  600
-#define WIDTH   800
 #define WALLC   200
-#define SIZE    8
+#define HEIGHT  60
+#define WIDTH   80
+#define SIZE    10
 
 typedef struct {
     int x;
