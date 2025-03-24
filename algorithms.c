@@ -59,7 +59,7 @@ void DFS(SDL_Renderer* renderer) {
     }
 
     // Show final path
-    int i = 0;
+    size_t i = 0;
     Coordinate* path = NULL;
     size_t pathSize = 0;
     Coordinate current = {pX, pY};
@@ -172,7 +172,7 @@ void A_star(SDL_Renderer* renderer) {
 
     // Afficher le chemin final
     if (found) {
-        for (size_t i = 0; i < openList.size; i++) {
+        for (int i = 0; i < openList.size; i++) {
             remove_sprite(renderer, openList.heap[i].x * SIZE, openList.heap[i].y * SIZE);
         }
 
@@ -181,7 +181,7 @@ void A_star(SDL_Renderer* renderer) {
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 
         while (!(current.x == startX && current.y == startY)) {
-            if (i > parentSize) {
+            if ((size_t)i > parentSize) {
                 printf("Infinite loop: path can't be determined\n");
                 return;
             }

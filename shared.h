@@ -11,9 +11,9 @@
 #include "priorityqueue.c"
 
 #define WALLC   200
-#define HEIGHT  60
-#define WIDTH   80
-#define SIZE    10
+// #define HEIGHT  60
+// #define WIDTH   80
+// #define SIZE    10
 
 typedef struct {
     int x;
