@@ -103,17 +103,7 @@ void buttonClicked(SDL_Rect buttonArea, int num) {
     }
 }
 
-int drawButton(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect buttonArea, const char* text) {
-    if (!renderer || !font || !text) {
-        printf("Erreur : Paramètres invalides (renderer, font ou text NULL).\n");
-        return -1;
-    }
-
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderFillRect(renderer, &buttonArea);
-
-    SDL_Color textColor = {0, 0, 0, 255};
-
+int drawText(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect textArea, const char* text, SDL_Color textColor) {
     SDL_Surface *textSurface= TTF_RenderText_Solid(font, text, textColor);
     if (!textSurface) {
         printf("Failed to create text surface: %s\n", TTF_GetError());
@@ -133,8 +123,8 @@ int drawButton(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect buttonArea, cons
 
     // Calculer la position pour centrer le texte dans le bouton
     SDL_Rect textRect = {
-        .x = buttonArea.x + (buttonArea.w - textWidth) / 2,
-        .y = buttonArea.y + (buttonArea.h - textHeight) / 2,
+        .x = textArea.x + (textArea.w - textWidth) / 2,
+        .y = textArea.y + (textArea.h - textHeight) / 2,
         .w = textWidth,
         .h = textHeight
     };
@@ -145,6 +135,18 @@ int drawButton(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect buttonArea, cons
     // Libérer les ressources
     SDL_FreeSurface(textSurface);
     SDL_DestroyTexture(textTexture);
+}
+
+int drawButton(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect buttonArea, const char* text) {
+    if (!renderer || !font || !text) {
+        printf("Erreur : Paramètres invalides (renderer, font ou text NULL).\n");
+        return -1;
+    }
+
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderFillRect(renderer, &buttonArea);
+
+    drawText(renderer, font, buttonArea, text, (SDL_Color){0, 0, 0, 255});
 
     return 0;
 }

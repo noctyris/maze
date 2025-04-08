@@ -42,9 +42,10 @@ int main() {
         return 1;
     }
 
-    TTF_Font *font = TTF_OpenFont(FONT, 20); // specify the path to your font file and font size
+    TTF_Font *fontS = TTF_OpenFont(FONT, 20);
+    TTF_Font *fontL = TTF_OpenFont(FONT, 40);
 
-    if (!font){
+    if (!fontS && !fontL){
         printf("Failed to load font: %s\n", TTF_GetError());
         return EXIT_FAILURE;
     }
@@ -55,8 +56,9 @@ int main() {
     SDL_Rect dfsButton = {100, 100, 100, 20};
     SDL_Rect astarButton = {100, 130, 100, 20};
 
-    drawButton(renderer, font, dfsButton, "DFS");
-    drawButton(renderer, font, astarButton, "A*");
+    drawText(renderer, fontL, (SDL_Rect){WIDTH*SIZE/2-200, 50, 400, 40}, "Which algorithm?", (SDL_Color){255, 255, 255, 255});
+    drawButton(renderer, fontS, dfsButton, "DFS");
+    drawButton(renderer, fontS, astarButton, "A*");
     SDL_Event e;
 
     while (!nAlgo && !quit) {
