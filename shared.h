@@ -1,7 +1,8 @@
-#ifndef DEP_H
-#define DEP_H
+#ifndef SHARED_H
+#define SHARED_H
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -11,9 +12,7 @@
 #include "priorityqueue.c"
 
 #define WALLC   200
-// #define HEIGHT  60
-// #define WIDTH   80
-// #define SIZE    10
+#define FONT "UbuntuMono.ttf"
 
 typedef struct {
     int x;
@@ -24,6 +23,11 @@ typedef struct {
     Coordinate key;
     Coordinate value;
 } ParentEntry;
+
+int nAlgo;
+int isClick;
+Coordinate clickStart = {0, 0};
+Coordinate clickEnd = {0, 0};
 
 Coordinate chooseRandomCoordinate(Coordinate* directions) {
     int randomIndex = rand() % 4;

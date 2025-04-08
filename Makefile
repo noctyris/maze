@@ -9,7 +9,7 @@ EXEC := maze
 
 CC	= gcc
 CFLAGS	= -Wall -Wextra -std=c99 -DHEIGHT=$(GHEIGHT) -DWIDTH=$(GWIDTH) -DSIZE=$(SIZE)
-LDFLAGS	= -lSDL2 -lm
+LDFLAGS	= -lSDL2 -lSDL2_ttf -lm
 
 maze: $(FILES)
 	$(CC) main.c -o $(EXEC) $(LDFLAGS) $(CFLAGS)

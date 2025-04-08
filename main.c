@@ -3,15 +3,18 @@
 int main() {
     srand(time(NULL));
 
-    char nAlgo[1];
-    printf("Quel algorithme exectuer ? \n1-\tDFS\n2-\tA*\n> ");
-    scanf("%1s", nAlgo);
-
     // Init SDL
     SDL_SetHint(SDL_HINT_RENDER_VSYNC, "0");
     if (SDL_Init(SDL_INIT_VIDEO) < 0 ) {
         printf("Error while initialisation");
         return 1;
+    }
+
+    // Init SDL_ttf
+    if (TTF_Init() < 0) {
+        printf("SDL_ttf could not initialize! TTF_Error: %s\n", TTF_GetError());
+        SDL_Quit();
+        return EXIT_FAILURE;
     }
 
     // Create window
@@ -24,7 +27,7 @@ int main() {
         SDL_WINDOW_SHOWN
     );
 
-    if (window == NULL) {
+    if (!window) {
         printf("Error while creating window");
         SDL_Quit();
         return 1;
@@ -39,12 +42,71 @@ int main() {
         return 1;
     }
 
+    TTF_Font *font = TTF_OpenFont(FONT, 20); // specify the path to your font file and font size
+
+    if (!font){
+        printf("Failed to load font: %s\n", TTF_GetError());
+        return EXIT_FAILURE;
+    }
+
+
+    int quit = 0;
+
+    SDL_Rect dfsButton = {100, 100, 100, 20};
+    SDL_Rect astarButton = {100, 130, 100, 20};
+
+    drawButton(renderer, font, dfsButton, "DFS");
+    drawButton(renderer, font, astarButton, "A*");
+    SDL_Event e;
+
+    while (!nAlgo && !quit) {
+        isClick = 0;
+        while (SDL_PollEvent(&e) != 0) {
+            switch (e.type) {
+                case SDL_QUIT:
+                    quit = 1;
+                    break;
+
+                case SDL_MOUSEBUTTONDOWN:
+                    clickStart.x = e.motion.x;
+                    clickStart.y = e.motion.y;
+                    break;
+                case SDL_MOUSEBUTTONUP:
+                    clickEnd.x = e.motion.x;
+                    clickEnd.y = e.motion.y;
+                    isClick = 1;
+                    break;
+            }
+        }
+
+        if (isClick) {
+            buttonClicked(dfsButton, 1);
+            buttonClicked(astarButton, 2);
+        }
+
+        SDL_RenderPresent(renderer);
+    }
+
+    if (nAlgo == 1) {
+        SDL_SetWindowTitle(window, "Maze | DFS");
+    } else if (nAlgo == 2) {
+        SDL_SetWindowTitle(window, "Maze | A*");
+    }
+
     maze(renderer,DIRECTIONS);
 
-    if (nAlgo[0] == '1') DFS(renderer);
-    else if (nAlgo[0] == '2') A_star(renderer);
+
+    /* nAlgo
+     *
+     * 1- DFS
+     * 2- A*
+     *
+    */
+    printf("%d\n", nAlgo);
+    if (nAlgo == 1) DFS(renderer);
+    else if (nAlgo == 2) A_star(renderer);
     else {
-        printf("Erreur: entrée non valide");
+        printf("Erreur: entrée non valide\n");
         return 1;
     }
 

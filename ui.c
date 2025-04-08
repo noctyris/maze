@@ -1,6 +1,9 @@
 #include "ui.h"
 
 void maze(SDL_Renderer* renderer, Coordinate* directions) {
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+
     SDL_SetRenderDrawColor(renderer, WALLC, WALLC, WALLC, 255);
     for (int x = SIZE; x < WIDTH * SIZE; x += SIZE * 2) {
         for (int y = SIZE; y < HEIGHT * SIZE; y += SIZE * 2) {
@@ -87,5 +90,61 @@ int endReached(SDL_Renderer* renderer, int x, int y) {
     if (r == 200 && g == 50 && b == 0) {
         return 1;
     }
+    return 0;
+}
+
+void buttonClicked(SDL_Rect buttonArea, int num) {
+    if (buttonArea.x < clickStart.x && clickStart.x < buttonArea.x+buttonArea.w && \
+        buttonArea.x < clickEnd.x && clickEnd.x < buttonArea.x+buttonArea.w && \
+        buttonArea.y < clickStart.y && clickStart.y < buttonArea.y+buttonArea.h && \
+        buttonArea.y < clickEnd.y && clickEnd.y < buttonArea.y+buttonArea.h
+    ) {
+        nAlgo = num;
+    }
+}
+
+int drawButton(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect buttonArea, const char* text) {
+    if (!renderer || !font || !text) {
+        printf("Erreur : Paramètres invalides (renderer, font ou text NULL).\n");
+        return -1;
+    }
+
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderFillRect(renderer, &buttonArea);
+
+    SDL_Color textColor = {0, 0, 0, 255};
+
+    SDL_Surface *textSurface= TTF_RenderText_Solid(font, text, textColor);
+    if (!textSurface) {
+        printf("Failed to create text surface: %s\n", TTF_GetError());
+        return EXIT_FAILURE;
+    }
+
+    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+    if (!textTexture){
+        printf("Échec de création de la texture de texte : %s\n", SDL_GetError());
+        SDL_FreeSurface(textSurface);
+        return -1;
+    }
+
+    // Obtenir les dimensions du texte
+    int textWidth = textSurface->w;
+    int textHeight = textSurface->h;
+
+    // Calculer la position pour centrer le texte dans le bouton
+    SDL_Rect textRect = {
+        .x = buttonArea.x + (buttonArea.w - textWidth) / 2,
+        .y = buttonArea.y + (buttonArea.h - textHeight) / 2,
+        .w = textWidth,
+        .h = textHeight
+    };
+
+    // Dessiner le texte sur le rendu
+    SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+
+    // Libérer les ressources
+    SDL_FreeSurface(textSurface);
+    SDL_DestroyTexture(textTexture);
+
     return 0;
 }
