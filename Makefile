@@ -17,5 +17,9 @@ maze: $(FILES)
 	clear -x
 	@./maze
 
+compile:
+	$(CC) main.c -o $(EXEC) $(LDFLAGS) $(CFLAGS)
+	@echo "Code compiled"
+
 clean:
 	rm -f $(EXEC)

@@ -21,6 +21,6 @@ int endReached(SDL_Renderer* renderer, int x, int y);
 
 void buttonClicked(SDL_Rect buttonArea, int num);
 
-int drawButton(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect buttonArea, const char* text);
+int drawButton(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect buttonArea, const char* text, SDL_Color color);
 
 #endif

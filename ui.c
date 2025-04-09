@@ -1,5 +1,8 @@
 #include "ui.h"
 
+SDL_Color normalColor = {255, 255, 255, 255};
+SDL_Color hoverColor = {200, 200, 200, 255};
+
 void maze(SDL_Renderer* renderer, Coordinate* directions) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
@@ -94,11 +97,7 @@ int endReached(SDL_Renderer* renderer, int x, int y) {
 }
 
 void buttonClicked(SDL_Rect buttonArea, int num) {
-    if (buttonArea.x < clickStart.x && clickStart.x < buttonArea.x+buttonArea.w && \
-        buttonArea.x < clickEnd.x && clickEnd.x < buttonArea.x+buttonArea.w && \
-        buttonArea.y < clickStart.y && clickStart.y < buttonArea.y+buttonArea.h && \
-        buttonArea.y < clickEnd.y && clickEnd.y < buttonArea.y+buttonArea.h
-    ) {
+    if (posIn(clickStart, buttonArea) && posIn(clickEnd, buttonArea)) {
         nAlgo = num;
     }
 }
@@ -135,15 +134,17 @@ int drawText(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect textArea, const ch
     // Libérer les ressources
     SDL_FreeSurface(textSurface);
     SDL_DestroyTexture(textTexture);
+
+    return 0;
 }
 
-int drawButton(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect buttonArea, const char* text) {
+int drawButton(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect buttonArea, const char* text, SDL_Color color) {
     if (!renderer || !font || !text) {
         printf("Erreur : Paramètres invalides (renderer, font ou text NULL).\n");
         return -1;
     }
 
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
     SDL_RenderFillRect(renderer, &buttonArea);
 
     drawText(renderer, font, buttonArea, text, (SDL_Color){0, 0, 0, 255});

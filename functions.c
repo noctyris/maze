@@ -65,3 +65,7 @@ Coordinate find_parent(ParentEntry* table, size_t size, Coordinate key) {
 float heuristic(int x1, int y1, int x2, int y2) {
     return abs(x1-x2) + abs(y1-y2);
 }
+
+int posIn(Coordinate pos, SDL_Rect area) {
+    return (area.x < pos.x && pos.x < area.x+area.w && area.y < pos.y && pos.y < area.y+area.h) ? 1 : 0;
+}

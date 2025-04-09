@@ -57,8 +57,6 @@ int main() {
     SDL_Rect astarButton = {100, 130, 100, 20};
 
     drawText(renderer, fontL, (SDL_Rect){WIDTH*SIZE/2-200, 50, 400, 40}, "Which algorithm?", (SDL_Color){255, 255, 255, 255});
-    drawButton(renderer, fontS, dfsButton, "DFS");
-    drawButton(renderer, fontS, astarButton, "A*");
     SDL_Event e;
 
     while (!nAlgo && !quit) {
@@ -67,8 +65,7 @@ int main() {
             switch (e.type) {
                 case SDL_QUIT:
                     quit = 1;
-                    break;
-
+                    return 0;
                 case SDL_MOUSEBUTTONDOWN:
                     clickStart.x = e.motion.x;
                     clickStart.y = e.motion.y;
@@ -78,6 +75,9 @@ int main() {
                     clickEnd.y = e.motion.y;
                     isClick = 1;
                     break;
+                case SDL_MOUSEMOTION:
+                    mousePos.x = e.motion.x;
+                    mousePos.y = e.motion.y;
             }
         }
 
@@ -86,28 +86,23 @@ int main() {
             buttonClicked(astarButton, 2);
         }
 
-        SDL_RenderPresent(renderer);
-    }
+        drawButton(renderer, fontS, dfsButton, "DFS", posIn(mousePos, dfsButton) ? hoverColor : normalColor);
+        drawButton(renderer, fontS, astarButton, "A*", posIn(mousePos, astarButton) ? hoverColor : normalColor);
 
-    if (nAlgo == 1) {
-        SDL_SetWindowTitle(window, "Maze | DFS");
-    } else if (nAlgo == 2) {
-        SDL_SetWindowTitle(window, "Maze | A*");
+        SDL_RenderPresent(renderer);
     }
 
     maze(renderer,DIRECTIONS);
 
-
-    /* nAlgo
-     *
-     * 1- DFS
-     * 2- A*
-     *
-    */
-    printf("%d\n", nAlgo);
-    if (nAlgo == 1) DFS(renderer);
-    else if (nAlgo == 2) A_star(renderer);
-    else {
+    switch (nAlgo) {
+        case 1:
+            SDL_SetWindowTitle(window, "Maze | DFS");
+            DFS(renderer);
+            break;
+        case 2:
+            SDL_SetWindowTitle(window, "Maze | A*");
+            A_star(renderer);
+            break;
         printf("Erreur: entrée non valide\n");
         return 1;
     }

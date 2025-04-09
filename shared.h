@@ -28,6 +28,7 @@ int nAlgo;
 int isClick;
 Coordinate clickStart = {0, 0};
 Coordinate clickEnd = {0, 0};
+Coordinate mousePos;
 
 Coordinate chooseRandomCoordinate(Coordinate* directions) {
     int randomIndex = rand() % 4;
