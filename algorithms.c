@@ -206,6 +206,108 @@ void A_star(SDL_Renderer* renderer) {
         SDL_RenderPresent(renderer);
     }
 
-    // free(visited);
+    free(parent);
+}
+
+void Dijkstra(SDL_Renderer* renderer) {
+    SDL_Event e;
+    int quit = 0, found = 0;
+
+    int startX = 0, startY = 0;
+    int goalX = WIDTH - 1, goalY = HEIGHT - 1;
+
+    PriorityQueue openList = {.size = 0};
+    pushPQ(&openList, startX, startY, 0);
+
+    int g[WIDTH][HEIGHT];
+    int visited[WIDTH][HEIGHT];
+    memset(visited, 0, sizeof(visited));
+
+    for (int i = 0; i < WIDTH; i++) {
+        for (int j = 0; j < HEIGHT; j++) {
+            g[i][j] = INT_MAX;
+        }
+    }
+    g[startX][startY] = 0;
+
+    ParentEntry* parent = NULL;
+    size_t parentSize = 0;
+    add_parent(&parent, &parentSize, (Coordinate){startX, startY}, (Coordinate){startX, startY});
+
+    while (!isEmpty(&openList) && !quit && !found) {
+        while (SDL_PollEvent(&e) != 0) {
+            if (e.type == SDL_QUIT) {
+                quit = 1;
+            }
+        }
+
+        Node current = popPQ(&openList);
+        int pX = current.x, pY = current.y;
+
+        if (visited[pX][pY]) continue;
+
+        visited[pX][pY] = 1;
+        remove_sprite(renderer, pX * SIZE, pY * SIZE);
+
+        if (pX == goalX && pY == goalY) {
+            found = 1;
+            break;
+        }
+
+        for (int i = 0; i < 4; i++) {
+            int gridX = pX + DIRECTIONS[i].x, gridY = pY + DIRECTIONS[i].y;
+            int nX = gridX * SIZE, nY = gridY * SIZE;
+
+            if (!isCellOk(renderer, nX, nY) || visited[gridX][gridY]) continue;
+
+            float tentative_g = g[pX][pY] + 1;
+
+            if (tentative_g < g[gridX][gridY]) {
+                g[gridX][gridY] = tentative_g;
+                pushPQ(&openList, gridX, gridY, tentative_g);
+
+                add_parent(&parent, &parentSize, (Coordinate){gridX, gridY}, (Coordinate){pX, pY});
+                draw_sprite(renderer, nX, nY);
+            }
+        }
+
+        SDL_RenderPresent(renderer);
+    }
+
+    if (found) {
+        for (int i = 0; i < openList.size; i++) {
+            remove_sprite(renderer, openList.heap[i].x * SIZE, openList.heap[i].y * SIZE);
+        }
+
+        int i = 0;
+        Coordinate current = {goalX, goalY};
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+
+        while (!(current.x == startX && current.y == startY)) {
+            if ((size_t)i > parentSize) {
+                printf("Infinite loop: path can't be determined\n");
+                return;
+            }
+            i++;
+
+            Coordinate parentCoord = find_parent(parent, parentSize, current);
+
+            SDL_RenderDrawLine(renderer, current.x * SIZE + SIZE / 2, current.y * SIZE + SIZE / 2,
+                               find_parent(parent, parentSize, current).x * SIZE + SIZE / 2,
+                               find_parent(parent, parentSize, current).y * SIZE + SIZE / 2);
+            SDL_RenderPresent(renderer);
+            current = parentCoord;
+        }
+    }
+
+    while (!quit) {
+        while (SDL_PollEvent(&e) != 0) {
+            if (e.type == SDL_QUIT) {
+                quit = 1;
+            }
+        }
+        SDL_RenderPresent(renderer);
+    }
+
     free(parent);
 }
