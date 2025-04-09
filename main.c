@@ -55,6 +55,7 @@ int main() {
 
     SDL_Rect dfsButton = {100, 100, 100, 20};
     SDL_Rect astarButton = {100, 130, 100, 20};
+    SDL_Rect dijkstraButton = {100, 160, 100, 20};
 
     drawText(renderer, fontL, (SDL_Rect){WIDTH*SIZE/2-200, 50, 400, 40}, "Which algorithm?", (SDL_Color){255, 255, 255, 255});
     SDL_Event e;
@@ -84,10 +85,12 @@ int main() {
         if (isClick) {
             buttonClicked(dfsButton, 1);
             buttonClicked(astarButton, 2);
+            buttonClicked(dijkstraButton, 3);
         }
 
         drawButton(renderer, fontS, dfsButton, "DFS", posIn(mousePos, dfsButton) ? hoverColor : normalColor);
         drawButton(renderer, fontS, astarButton, "A*", posIn(mousePos, astarButton) ? hoverColor : normalColor);
+        drawButton(renderer, fontS, dijkstraButton, "Dijkstra", posIn(mousePos, dijkstraButton) ? hoverColor : normalColor);
 
         SDL_RenderPresent(renderer);
     }
@@ -102,6 +105,10 @@ int main() {
         case 2:
             SDL_SetWindowTitle(window, "Maze | A*");
             A_star(renderer);
+            break;
+        case 3:
+            SDL_SetWindowTitle(window, "Maze | Dijkstra");
+            Dijkstra(renderer);
             break;
         printf("Erreur: entrée non valide\n");
         return 1;
