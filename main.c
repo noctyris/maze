@@ -51,17 +51,30 @@ int main() {
 
     int quit = 0;
     int nAlgo = 0;
-    int sizeWriting = 0;
-    char sizeEntry[3] = "";
-    int sizeEntryLength = 0;
 
     SDL_Rect dfsButton = {100, 100, 100, 20};
     SDL_Rect astarButton = {100, 130, 100, 20};
     SDL_Rect dijkstraButton = {100, 160, 100, 20};
-    SDL_Rect inputField = {600, 100, 100, 20};
+
+    int sizeWriting = 0;
+    char sizeEntry[3] = "";
+    int sizeEntryLength = 0;
+    SDL_Rect sizeInputField = {600, 100, 100, 20};
+
+    int widthWriting = 0;
+    char widthEntry[3] = "";
+    int widthEntryLength = 0;
+    SDL_Rect widthInputField = {600, 300, 100, 20};
+
+    int heightWriting = 0;
+    char heightEntry[3] = "";
+    int heightEntryLength = 0;
+    SDL_Rect heightInputField = {600, 500, 100, 20};
 
     drawText(renderer, fontL, (SDL_Rect){0, 50, 300, 40}, "Algorithms", (SDL_Color){255, 255, 255, 255});
     drawText(renderer, fontL, (SDL_Rect){650, 50, 0, 40}, "Cell size", (SDL_Color){255, 255, 255, 255});
+    drawText(renderer, fontL, (SDL_Rect){650, 250, 0, 40}, "Grid width", (SDL_Color){255, 255, 255, 255});
+    drawText(renderer, fontL, (SDL_Rect){650, 450, 0, 40}, "Grid height", (SDL_Color){255, 255, 255, 255});
     SDL_Event e;
 
     while (!nAlgo && !quit) {
@@ -102,6 +115,40 @@ int main() {
                         }
                         SIZE = atoi(sizeEntry);
                     }
+                    if (widthWriting) {
+                        if (e.key.keysym.sym >= SDLK_0 && e.key.keysym.sym <= SDLK_9) {
+                            // Ajouter le chiffre à widthEntry si la limite n'est pas atteinte
+                            if (widthEntryLength < 4) { // Taille maximale : 3 caractères
+                                widthEntry[widthEntryLength] = '0' + (e.key.keysym.sym - SDLK_0);
+                                widthEntryLength++;
+                                widthEntry[widthEntryLength] = '\0'; // Terminateur de chaîne
+                            }
+                        } else if (e.key.keysym.sym == SDLK_BACKSPACE) {
+                            // Supprimer le dernier caractère avec Backspace
+                            if (widthEntryLength > 0) {
+                                widthEntryLength--;
+                                widthEntry[widthEntryLength] = '\0';
+                            }
+                        }
+                        WIDTH = atoi(widthEntry);
+                    }
+                    if (heightWriting) {
+                        if (e.key.keysym.sym >= SDLK_0 && e.key.keysym.sym <= SDLK_9) {
+                            // Ajouter le chiffre à heightEntry si la limite n'est pas atteinte
+                            if (heightEntryLength < 4) { // Taille maximale : 3 caractères
+                                heightEntry[heightEntryLength] = '0' + (e.key.keysym.sym - SDLK_0);
+                                heightEntryLength++;
+                                heightEntry[heightEntryLength] = '\0'; // Terminateur de chaîne
+                            }
+                        } else if (e.key.keysym.sym == SDLK_BACKSPACE) {
+                            // Supprimer le dernier caractère avec Backspace
+                            if (heightEntryLength > 0) {
+                                heightEntryLength--;
+                                heightEntry[heightEntryLength] = '\0';
+                            }
+                        }
+                        HEIGHT = atoi(heightEntry);
+                    }
                     break;
             }
         }
@@ -110,21 +157,27 @@ int main() {
             buttonClicked(dfsButton, &nAlgo, 1);
             buttonClicked(astarButton, &nAlgo, 2);
             buttonClicked(dijkstraButton, &nAlgo, 3);
-            buttonClicked(inputField, &sizeWriting, 1);
-            if (!posIn(clickStart, inputField) && !posIn(clickEnd, inputField)) sizeWriting = 0;
+            buttonClicked(sizeInputField, &sizeWriting, 1);
+            buttonClicked(widthInputField, &widthWriting, 1);
+            buttonClicked(heightInputField, &heightWriting, 1);
+            if (!posIn(clickStart, sizeInputField) && !posIn(clickEnd, sizeInputField)) sizeWriting = 0;
+            if (!posIn(clickStart, widthInputField) && !posIn(clickEnd, widthInputField)) widthWriting = 0;
+            if (!posIn(clickStart, heightInputField) && !posIn(clickEnd, heightInputField)) heightWriting = 0;
         }
 
         drawButton(renderer, fontS, dfsButton, "DFS", posIn(mousePos, dfsButton) ? hoverColor : normalColor);
         drawButton(renderer, fontS, astarButton, "A*", posIn(mousePos, astarButton) ? hoverColor : normalColor);
         drawButton(renderer, fontS, dijkstraButton, "Dijkstra", posIn(mousePos, dijkstraButton) ? hoverColor : normalColor);
-        drawButton(renderer, fontS, inputField, strlen(sizeEntry)!=0 ? sizeEntry : " ", sizeWriting ? (SDL_Color){255, 230, 230, 255} : (posIn(mousePos, inputField) ? hoverColor : normalColor));
+        drawButton(renderer, fontS, sizeInputField, strlen(sizeEntry)!=0 ? sizeEntry : " ", sizeWriting ? (SDL_Color){255, 220, 220, 255} : (posIn(mousePos, sizeInputField) ? hoverColor : normalColor));
+        drawButton(renderer, fontS, widthInputField, strlen(widthEntry)!=0 ? widthEntry : " ", widthWriting ? (SDL_Color){255, 220, 220, 255} : (posIn(mousePos, widthInputField) ? hoverColor : normalColor));
+        drawButton(renderer, fontS, heightInputField, strlen(heightEntry)!=0 ? heightEntry : " ", heightWriting ? (SDL_Color){255, 220, 220, 255} : (posIn(mousePos, heightInputField) ? hoverColor : normalColor));
 
         SDL_RenderPresent(renderer);
     }
 
     if (!SIZE) SIZE = 10;
-    WIDTH = 800/SIZE;
-    HEIGHT = 600/SIZE;
+    if (!WIDTH) WIDTH = 80;
+    if (!HEIGHT) HEIGHT = 60;
     SDL_SetWindowSize(window, WIDTH*SIZE, HEIGHT*SIZE);
 
     maze(renderer,DIRECTIONS);
