@@ -19,7 +19,7 @@ int isCellOk(SDL_Renderer* renderer, int x, int y);
 
 int endReached(SDL_Renderer* renderer, int x, int y);
 
-void buttonClicked(SDL_Rect buttonArea, int num);
+void buttonClicked(SDL_Rect buttonArea, int *var, int num);
 
 int drawButton(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect buttonArea, const char* text, SDL_Color color);
 

@@ -24,7 +24,8 @@ typedef struct {
     Coordinate value;
 } ParentEntry;
 
-int nAlgo;
+int SIZE, WIDTH = 80, HEIGHT = 60;
+
 int isClick;
 Coordinate clickStart = {0, 0};
 Coordinate clickEnd = {0, 0};

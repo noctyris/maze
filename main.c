@@ -22,8 +22,7 @@ int main() {
         "Maze",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
-        WIDTH * SIZE,
-        HEIGHT * SIZE,
+        800, 600,
         SDL_WINDOW_SHOWN
     );
 
@@ -43,21 +42,26 @@ int main() {
     }
 
     TTF_Font *fontS = TTF_OpenFont(FONT, 20);
-    TTF_Font *fontL = TTF_OpenFont(FONT, 40);
+    TTF_Font *fontL = TTF_OpenFont(FONT, 30);
 
     if (!fontS && !fontL){
         printf("Failed to load font: %s\n", TTF_GetError());
         return EXIT_FAILURE;
     }
 
-
     int quit = 0;
+    int nAlgo = 0;
+    int sizeWriting = 0;
+    char sizeEntry[3] = "";
+    int sizeEntryLength = 0;
 
     SDL_Rect dfsButton = {100, 100, 100, 20};
     SDL_Rect astarButton = {100, 130, 100, 20};
     SDL_Rect dijkstraButton = {100, 160, 100, 20};
+    SDL_Rect inputField = {600, 100, 100, 20};
 
-    drawText(renderer, fontL, (SDL_Rect){WIDTH*SIZE/2-200, 50, 400, 40}, "Which algorithm?", (SDL_Color){255, 255, 255, 255});
+    drawText(renderer, fontL, (SDL_Rect){0, 50, 300, 40}, "Algorithms", (SDL_Color){255, 255, 255, 255});
+    drawText(renderer, fontL, (SDL_Rect){650, 50, 0, 40}, "Cell size", (SDL_Color){255, 255, 255, 255});
     SDL_Event e;
 
     while (!nAlgo && !quit) {
@@ -79,21 +83,49 @@ int main() {
                 case SDL_MOUSEMOTION:
                     mousePos.x = e.motion.x;
                     mousePos.y = e.motion.y;
+                    break;
+                case SDL_KEYDOWN:
+                    if (sizeWriting) {
+                        if (e.key.keysym.sym >= SDLK_0 && e.key.keysym.sym <= SDLK_9) {
+                            // Ajouter le chiffre à sizeEntry si la limite n'est pas atteinte
+                            if (sizeEntryLength < 2) { // Taille maximale : 3 caractères
+                                sizeEntry[sizeEntryLength] = '0' + (e.key.keysym.sym - SDLK_0);
+                                sizeEntryLength++;
+                                sizeEntry[sizeEntryLength] = '\0'; // Terminateur de chaîne
+                            }
+                        } else if (e.key.keysym.sym == SDLK_BACKSPACE) {
+                            // Supprimer le dernier caractère avec Backspace
+                            if (sizeEntryLength > 0) {
+                                sizeEntryLength--;
+                                sizeEntry[sizeEntryLength] = '\0';
+                            }
+                        }
+                        SIZE = atoi(sizeEntry);
+                    }
+                    break;
             }
         }
 
         if (isClick) {
-            buttonClicked(dfsButton, 1);
-            buttonClicked(astarButton, 2);
-            buttonClicked(dijkstraButton, 3);
+            buttonClicked(dfsButton, &nAlgo, 1);
+            buttonClicked(astarButton, &nAlgo, 2);
+            buttonClicked(dijkstraButton, &nAlgo, 3);
+            buttonClicked(inputField, &sizeWriting, 1);
+            if (!posIn(clickStart, inputField) && !posIn(clickEnd, inputField)) sizeWriting = 0;
         }
 
         drawButton(renderer, fontS, dfsButton, "DFS", posIn(mousePos, dfsButton) ? hoverColor : normalColor);
         drawButton(renderer, fontS, astarButton, "A*", posIn(mousePos, astarButton) ? hoverColor : normalColor);
         drawButton(renderer, fontS, dijkstraButton, "Dijkstra", posIn(mousePos, dijkstraButton) ? hoverColor : normalColor);
+        drawButton(renderer, fontS, inputField, strlen(sizeEntry)!=0 ? sizeEntry : " ", sizeWriting ? (SDL_Color){255, 230, 230, 255} : (posIn(mousePos, inputField) ? hoverColor : normalColor));
 
         SDL_RenderPresent(renderer);
     }
+
+    if (!SIZE) SIZE = 10;
+    WIDTH = 800/SIZE;
+    HEIGHT = 600/SIZE;
+    SDL_SetWindowSize(window, WIDTH*SIZE, HEIGHT*SIZE);
 
     maze(renderer,DIRECTIONS);
 

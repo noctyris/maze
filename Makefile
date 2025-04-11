@@ -8,7 +8,7 @@ FILES := algorithms.c functions.c functions.h main.c priorityqueue.c shared.h ui
 EXEC := maze
 
 CC	= gcc
-CFLAGS	= -Wall -Wextra -std=c99 -DHEIGHT=$(GHEIGHT) -DWIDTH=$(GWIDTH) -DSIZE=$(SIZE)
+CFLAGS	= -Wall -Wextra -std=c99
 LDFLAGS	= -lSDL2 -lSDL2_ttf -lm
 
 maze: $(FILES)

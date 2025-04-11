@@ -96,9 +96,9 @@ int endReached(SDL_Renderer* renderer, int x, int y) {
     return 0;
 }
 
-void buttonClicked(SDL_Rect buttonArea, int num) {
+void buttonClicked(SDL_Rect buttonArea, int *var, int num) {
     if (posIn(clickStart, buttonArea) && posIn(clickEnd, buttonArea)) {
-        nAlgo = num;
+        *var = num;
     }
 }
 
